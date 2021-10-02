@@ -1,0 +1,8 @@
+Flask
+werkzeug
+validators
+flask-limiter
+flask_restx
+gunicorn
+celery[mongodb]
+pytest

@@ -1,0 +1,4 @@
+requests
+pytest
+celery[mongodb]
+celery[pytest]

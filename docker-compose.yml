@@ -1,0 +1,63 @@
+version: "3.3"
+services:
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+
+  rabbit:
+    hostname: rabbit
+    image: "rabbitmq:3-management"
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=mypass
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+
+  api:
+    build: './api'
+    volumes:
+      - ./api:/api
+    env_file: api/.api-env
+    expose:
+      - "8000"
+    ports:
+      - "8000:8000"
+    depends_on:
+      - rabbit
+      - mongo
+
+  tasks:
+    build: './tasks'
+    command: ["celery", "-A", "tasks", "worker", "-l", "info", "-c", "3", "-n", "tasks-worker-1@%n"]
+    volumes:
+      - ./tasks:/tasks
+    env_file: tasks/.tasks-env
+    user: nobody
+    depends_on:
+      - rabbit
+      - mongo
+      - api
+
+  tasks-test:
+    build: './tasks'
+    command: ["celery", "-A", "tasks", "worker", "-l", "info", "-n", "tasks-test-worker-1@%n", "-Q", "tests"]
+    volumes:
+      - ./tasks:/tasks
+    env_file: tasks/.tasks-env
+    user: nobody
+    depends_on:
+      - rabbit
+      - mongo
+      - api
+
+  flower:
+    image: mher/flower
+    ports:
+      - "5555:5555"
+    env_file: .env    
+    depends_on:
+      - rabbit
+      - mongo
+      - tasks

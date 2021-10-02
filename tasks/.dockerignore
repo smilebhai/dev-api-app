@@ -1,0 +1,41 @@
+# PyCharm
+.idea/
+
+.vscode/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+
+
+# virtualenv
+venv*/
+
+# misc
+.DS_Store
+.tox
+.coverage
+.coverage.*
+.cache
+coverage.xml
+*,cover
+*.log
+.git
+*.md
+.gitignore
+
+.dockerignore
+Dockerfile
+git/
+
+build
+dist
+*.egg-info
+*.egg/
+*.pyc
+*.swp
+
+# Compiled Documentation
+docs/_build
